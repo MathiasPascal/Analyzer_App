@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Perfume Detector</title>
+</head>
+
+<body>
+    <h1>Perfume Analyzer</h1>
+    <input type="text" id="perfumeName" placeholder="Enter perfume name">
+    <button id="submitButton">Submit</button>
+    <button id="getAllPerfumes">Get All Perfumes</button>
+    <div id="result"></div>
+    
+
+    <script>
+        const perfumeNameInput = document.getElementById('perfumeName');
+        const submitButton = document.getElementById('submitButton');
+        const getAllPerfumesButton = document.getElementById('getAllPerfumes');
+        const resultDiv = document.getElementById('result');
+
+        submitButton.addEventListener('click', () => {
+            const perfumeName = perfumeNameInput.value;
+            fetch(`/perfume?name=${perfumeName}`)
+                .then(response => response.json())
+                .then(data => {
+                    let formattedData = '';
+                    for (let key in data) {
+                        formattedData += `${data[key]}<br>`;
+                    }
+                    resultDiv.innerHTML = formattedData;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+
+        getAllPerfumesButton.addEventListener('click', () => {
+            fetch('/perfumes')
+                .then(response => response.json())
+                .then(data => {
+                    var table = document.createElement('table');
+                    for (var i = 0; i < data.perfumes.length; i++) {
+                        var row = document.createElement('tr');
+                        var cell = document.createElement('td');
+                        cell.textContent = data.perfumes[i];
+                        row.appendChild(cell);
+                        table.appendChild(row);
+                    }
+                    var resultDiv = document.getElementById('result');
+                    resultDiv.innerHTML = '';
+                    resultDiv.appendChild(table);
+                });
+        });
+    </script>
+</body>
+<script src="app.js"></script>
+
+
+
+</html>
